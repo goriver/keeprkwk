@@ -4,7 +4,8 @@ import re
 
 
 class ScolarObj:
-    def __init__(self, title,writer, date, depart, attach, attach_link, article):
+    def __init__(self, title,writer, date, depart, attach, attach_link, article_image, article_text):
+        # article_text
         # 파이썬 생성자
         self.title = title
         self.writer = writer
@@ -12,8 +13,8 @@ class ScolarObj:
         self.depart = depart
         self.attach = attach
         self.attach_link = attach_link
-        self.article = article
-        # self.article_text = article_text
+        self.article_image = article_image
+        self.article_text = article_text
 
 
 
@@ -73,19 +74,25 @@ class ScolarCrawling:
 
         # 장학 공지사항 내용
         articles = tmp_soup.find(id='view-detail-data')
+        # 내용 이미지 담아놓는 tmp_article_image
         article = articles.select('#view-detail-data > p > img')
+        for art_image in article:
+            tmp_article_image = art_image
+            # tmp_article_image +=arti_image로 하면 오류
 
-        OMG = str(articles.find_all("p"))
-        OMG = re.sub('<.+?>', '', OMG, 0).strip()
-        #OMG가 리스트 형태. IMG가 들어가는 리스트는 빈 공간(NULL)로 출력됨
-        # tmp_article문에 src문과 text문은 같이 못들어가나요??
-        # 근데 따로 변수를 할당하면 각자 리스트의 길이가 다를텐데 이를 어떻게 해결할까요...?ㅠ
 
-        for art in article:
-            tmp_article = art
+        # 내용 켁스트 담아놓는 tmp_
+        contents = str(articles.find_all("p"))
+        contents = re.sub('<.+?>', '', contents, 0).strip()
+        tmp_article_text=[]
+        for content in contents:
+            tmp_article_text += content
 
-        em = ScolarObj(tmp_title, tmp_writer, tmp_date, tmp_depart, tmp_attach, tmp_attach_link, tmp_article)
+
+
+
+        em = ScolarObj(tmp_title, tmp_writer, tmp_date, tmp_depart, tmp_attach, tmp_attach_link, tmp_article_image, tmp_article_text)
         scolarDetail.append(em)
 
     for detail in scolarDetail:
-        print("{}".format(detail.articleText))
+        print("{}".format(detail.article_text))
