@@ -84,14 +84,9 @@ class ScolarCrawling:
         # 내용 켁스트 담아놓는 tmp_
         contents = str(articles.find_all("p"))
         contents = re.sub('<.+?>', '', contents, 0).strip()
-        tmp_article_text=[]
-        for content in contents:
-            tmp_article_text += content
 
 
-
-
-        em = ScolarObj(tmp_title, tmp_writer, tmp_date, tmp_depart, tmp_attach, tmp_attach_link, tmp_article_image, tmp_article_text)
+        em = ScolarObj(tmp_title, tmp_writer, tmp_date, tmp_depart, tmp_attach, tmp_attach_link, tmp_article_image,  contents.join('') )
         scolarDetail.append(em)
 
     for detail in scolarDetail:
