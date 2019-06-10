@@ -19,18 +19,10 @@ class ScolarObj:
 
 class ScolarCrawling:
     # 학교 사이트의 url을 불러온다.
-    for i in range(57):
-        base_url = 'https://www.kookmin.ac.kr/site/resource/board/scholarship/?&pn={}'
-        page_url = base_url.format(i + 1 - 1)
-        req = requests.get(page_url)
-        html = req.text
-        soup = BeautifulSoup(html, 'html.parser')
-        my_lists = soup.select(
-            'td > a'
-        )
+    def getDetail(lists):
         scolarDetail = []
             # 세부 내용 긁어오
-        for list in my_lists:
+        for list in lists:
 
             url = 'https://www.kookmin.ac.kr/site/resource/board/scholarship/' + list.get('href')
             tmp_html = requests.get(url)
