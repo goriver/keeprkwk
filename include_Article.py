@@ -5,6 +5,7 @@ from bs4 import BeautifulSoup
 
 class Scholarship:
     scolar_detail = []
+    #자바의 List<BoardVO> BoardList = new ArrayList<>();와 같이 수행되도록 변환시키기
 
     def scholar_notice(self, title, writer, date, depart, attach, attach_link, article_image, article_text):
         # 공지사항 객체(이게 지금까지는 따로 따로 작동됨
