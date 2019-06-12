@@ -1,6 +1,8 @@
 import requests
 from bs4 import BeautifulSoup
-
+# 1. Scholarship 부터 확실히 리스트에 담아보기
+# class 1은 객체를 만드는 거 class 2는 각각의 url을 clean해주는 함수 들어있는 클래스 class 3은 각각의 url을 한정지어주는 클래스
+# 2. 그 다음에 다른 홈페이지 긁어오기
 
 
 class Scholarship:
@@ -18,8 +20,8 @@ class Scholarship:
         self.article_image = article_image
         self.article_text = article_text
         
-    def clean_crawling(board_detail):
-        scolar_detail = []
+    def clean_crawling(self, board_detail):
+        
         title = tmp_soup.find(id='article_title')
         # 장학 공지사항 글쓴이
         writer = board.select(
