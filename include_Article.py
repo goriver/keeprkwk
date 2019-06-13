@@ -3,7 +3,7 @@ from bs4 import BeautifulSoup
 
 
 class Scholarship:
-    def __init__(self, title, writer, date, depart, attach, attach_link, article_image, article_text):
+    def scholar_notices(self, title, writer, date, depart, attach, attach_link, article_image, article_text):
         # 공지사항 객체
         self.title = title
         self.writer = writer
@@ -56,8 +56,8 @@ class Scholarship:
 
         content = tmp_soup.find(id='view-detail-data').text
 
-        tmp_ary = Scholarship.scolarNotice(tmp_title, tmp_writer, tmp_date, tmp_depart, tmp_attach,
-                                      tmp_attach_link, tmp_article_image, content)
+        tmp_ary = Scholarship.scholar_notices(tmp_title, tmp_writer, tmp_date, tmp_depart, tmp_attach,
+                                       tmp_attach_link, tmp_article_image, content)
         return tmp_ary
 
 class WebCrawling():
@@ -68,8 +68,7 @@ class WebCrawling():
         school_scholar = []
         for i in range(1,57):
             base_url = 'https://www.kookmin.ac.kr/site/resource/board/scholarship/?&pn={}'
-            tmp_url = base_url
-            page_url = tmp_url.format(i - 1)
+            page_url = base_url.format(i - 1)
             req = requests.get(page_url)
             html = req.text
             soup = BeautifulSoup(html, 'html.parser')
@@ -93,7 +92,7 @@ class WebCrawling():
 
 
 scholar_detail = WebCrawling.website_crawling()
-for detail in scolar_detail:
+for detail in scholar_detail:
     print("{}".format(detail.article))
     # 문제점. 함수 호출이 안됨 ( 매개변수 self를 넣었는데 그게 문제인가요...?)
     # Traceback (most recent call last):
