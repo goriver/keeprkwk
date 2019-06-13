@@ -1,16 +1,10 @@
 import requests
 from bs4 import BeautifulSoup
-# 1. Scholarship 부터 확실히 리스트에 담아보기
-# class 1은 객체를 만드는 거 class 2는 각각의 url을 clean해주는 함수 들어있는 클래스 class 3은 각각의 url을 한정지어주는 클래스
-# 2. 그 다음에 다른 홈페이지 긁어오기
 
 
 class Scholarship:
-    scolar_detail = []
-    #자바의 List<BoardVO> BoardList = new ArrayList<>();와 같이 수행되도록 변환시키기
-
-    def scholar_notice(self, title, writer, date, depart, attach, attach_link, article_image, article_text):
-        # 공지사항 객체(이게 지금까지는 따로 따로 작동됨
+    def __init__(self, title, writer, date, depart, attach, attach_link, article_image, article_text):
+        # 공지사항 객체
         self.title = title
         self.writer = writer
         self.date = date
@@ -19,19 +13,21 @@ class Scholarship:
         self.attach_link = attach_link
         self.article_image = article_image
         self.article_text = article_text
-        
-    def clean_crawling(self, board_detail):
-        
+
+    def clean_crawling(self, board_detail, tmp_soup):
+        # 장학 공지사항 제목
         title = tmp_soup.find(id='article_title')
+        tmp_title = title.text
+
         # 장학 공지사항 글쓴이
-        writer = board.select(
-                '#content_body > section > div.boardview > table > tbody > tr:nth-child(1) > td:nth-child(4) > span'
+        writer = board_detail.select(
+            '#content_body > section > div.boardview > table > tbody > tr:nth-child(1) > td:nth-child(4) > span'
         )
         for w in writer:
             tmp_writer = w.text
-                # 장학 공지사항 날짜
+        # 장학 공지사항 날짜
         date = tmp_soup.select(
-           '#content_body > section > div.boardview > table > tbody > tr:nth-child(2) > td:nth-child(2)'
+            '#content_body > section > div.boardview > table > tbody > tr:nth-child(2) > td:nth-child(2)'
         )
         for d in date:
             tmp_date = d.text
@@ -43,7 +39,7 @@ class Scholarship:
             tmp_depart = de.text
         # 장학 공지사항 첨부파일
         attach = tmp_soup.select(
-               '#content_body > section > div.boardview > table > tbody > tr:nth-child(4) > td > a'
+            '#content_body > section > div.boardview > table > tbody > tr:nth-child(4) > td > a'
         )
         tmp_attach = []
         tmp_attach_link = []
@@ -52,22 +48,28 @@ class Scholarship:
             tmp_attach_link.append(at.get('href'))
         # 장학 공지사항 내용
         articles = tmp_soup.find(id='view-detail-data')
-         # 세부 내용 이미지 담아놓는 tmp_article_image
+        # 세부 내용 이미지 담아놓는 tmp_article_image
         article = articles.select('#view-detail-data > p > img')
-        tmp_article_image=[]
+        tmp_article_image = []
         for art_image in article:
             tmp_article_image = art_image
 
         content = tmp_soup.find(id='view-detail-data').text
-        em = Scholarship.scolarNotice(tmp_title, tmp_writer, tmp_date, tmp_depart, tmp_attach,
-                                      tmp_attach_link, tmp_article_image,content)
-        scolar_detail.append(em)
-        # 여기까지 새롭게 들어오는 객체를 scholar_detail에 담아주는 함수
+
+        tmp_ary = Scholarship.scolarNotice(tmp_title, tmp_writer, tmp_date, tmp_depart, tmp_attach,
+                                      tmp_attach_link, tmp_article_image, content)
+        return tmp_ary
+
+class WebCrawling():
+    def __init__(self):
+        pass
 
     def website_crawling(self):# 학교 사이트의 url을 불러온다.
+        school_scholar = []
         for i in range(1,57):
             base_url = 'https://www.kookmin.ac.kr/site/resource/board/scholarship/?&pn={}'
-            page_url = base_url.format(i - 1)
+            tmp_url = base_url
+            page_url = tmp_url.format(i - 1)
             req = requests.get(page_url)
             html = req.text
             soup = BeautifulSoup(html, 'html.parser')
@@ -83,6 +85,18 @@ class Scholarship:
                 # boardview class
                 board = tmp_soup.find("div", {"class": "boardview"})
                 # 공지사항 각 객체에 넣는 함수 호출하기
-                scolar_detail = clean_crawling(board)
-        for detail in scolar_detail:
-            print("{}".format(detail.article_text))
+
+                em_scholar = scholarship.clean_crawling(board, tmp_soup)
+                school_scholar.append(em_scholar)
+        return school_scholar
+
+
+
+scholar_detail = WebCrawling.website_crawling()
+for detail in scolar_detail:
+    print("{}".format(detail.article))
+    # 문제점. 함수 호출이 안됨 ( 매개변수 self를 넣었는데 그게 문제인가요...?)
+    # Traceback (most recent call last):
+    #   File "C:/Users/NoteBook/PycharmProjects/untitled2/project1/include_Article.py", line 95, in <module>
+    #     scholar_detail = WebCrawling.website_crawling(url)
+    # TypeError: website_crawling() missing 1 required positional argument: 'base_url'
