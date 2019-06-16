@@ -28,7 +28,7 @@ class GetCleanedData:
         print(str(self.attach_link))
         print(str(self.article_image))
         print(self.article_text)
-        print()
+        print('--------------------------------------------------------------')
 
     def clean_crawling(self, tmp_soup):
 
@@ -56,6 +56,7 @@ class GetCleanedData:
             tmp_depart = department.text
 
         # 장학 공지사항 첨부파일
+        # -- 비어도 이미 빈 파일 선언됨
         attachments = tmp_soup.select(
             '#content_body > section > div.boardview > table > tbody > tr:nth-of-type(4) > td > a'
         )
@@ -72,8 +73,9 @@ class GetCleanedData:
         tmp_article_image = []
         for art_image in article:
             tmp_article_image = art_image
-
         content = tmp_soup.find(id='view-detail-data').text
+        if(len(content)==0): # null이면 is not null 대신 씀
+            content = ''
 
         tmp_ary = self.school_notices(title=tmp_title, writer=tmp_writer, date=tmp_date, depart=tmp_depart,
                                        attach=tmp_attach, attach_link=tmp_attach_link,
